@@ -15,11 +15,13 @@ import Adapt
 export MetalBackend
 
 struct MetalBackend <: KA.GPU
+    storage::MTL.MTLResourceOptions
 end
+MetalBackend(;storage=DefaultStorageMode) = MetalBackend(storage)
 
-KA.allocate(::MetalBackend, ::Type{T}, dims::Tuple) where T = MtlArray{T}(undef, dims)
-KA.zeros(::MetalBackend, ::Type{T}, dims::Tuple) where T = Metal.zeros(T, dims)
-KA.ones(::MetalBackend, ::Type{T}, dims::Tuple) where T = Metal.ones(T, dims)
+KA.allocate(backend::MetalBackend, ::Type{T}, dims::Dims{N}) where {T,N} = MtlArray{T,N,backend.storage}(undef, dims)
+KA.zeros(backend::MetalBackend, ::Type{T}, dims::Tuple) where T = Metal.zeros(T, dims; storage=backend.storage)
+KA.ones(backend::MetalBackend, ::Type{T}, dims::Tuple) where T = Metal.ones(T, dims; storage=backend.storage)
 
 KA.get_backend(::MtlArray) = MetalBackend()
 KA.synchronize(::MetalBackend) = synchronize()

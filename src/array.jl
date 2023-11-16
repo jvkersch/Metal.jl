@@ -1,6 +1,6 @@
 # host array
 
-export MtlArray, MtlVector, MtlMatrix, MtlVecOrMat, mtl
+export MtlArray, MtlVector, MtlMatrix, MtlVecOrMat, mtl, DefaultStorageMode
 
 function hasfieldcount(@nospecialize(dt))
     try
